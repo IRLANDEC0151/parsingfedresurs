@@ -27,9 +27,9 @@ async function parsing(param) {
         browser = await puppeteer.launch({
             headless: true,
             args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-              ],  
+                '--no-sandbox'
+
+            ]
         })
         const page = await browser.newPage();
         await page.goto(link, { waitUntil: "domcontentloaded" })
