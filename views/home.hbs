@@ -1,0 +1,47 @@
+<body>
+  <div class="container">
+    <div class="row justify-content-center mb-5">
+      <div class="col-6" align="center">
+        <div class="input-group mt-5 innInput">
+          <input
+            type="number"
+            class="form-control"
+            placeholder="Инн"
+            aria-label="inn"
+          />
+        </div>
+      </div>
+      <div class="col-6" align="center">
+        <div class="input-group mt-5 dateInput">
+          <span class="input-group-text">Период публикации</span>
+          <input type="date" class="form-control dateFrom" />
+          <input type="date" class="form-control dateTo" />
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col" align="center">
+        <button
+          type="button"
+          class="btn btn-primary searchBtn"
+          disabled
+        >Поиск</button>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col">
+        <table class="table table-bordered table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Компания</th>
+              <th scope="col">Инн</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>

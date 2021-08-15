@@ -1,0 +1,10 @@
+html {
+  font-size: 15px;
+}
+.innInput {
+  width: 20rem;
+}
+.searchBtn {
+  width: 20rem;
+  height: 3rem;
+}
