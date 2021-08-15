@@ -23,7 +23,7 @@ router.post('/postForm', async (req, res) => {
 
 async function parsing(param) {
     let arr = []
-    let items
+    let items=0
     const link = 'https://fedresurs.ru/backend/encumbrances/'
     try {
         let configToFound = {
