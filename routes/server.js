@@ -31,8 +31,8 @@ async function parsing(param) {
             url: link,
             headers: {
                 'referer': `https://fedresurs.ru/search/encumbrances?offset=0&limit=15&searchString=${param.inn}&additionalSearchFnp=true&publishDateStart=${param.dateFrom}T00:00:00.000&publishDateEnd=${param.dateTo}T23:59:59.999`,
-                'Cookie': 'fedresurscookie=8678c7cca03457ecde68163a7f433df2',
-                'User-Agent': 'PostmanRuntime/7.28.3'
+                'Cookie': 'fedresurscookie=18b095deae8df78427a4c1569de7322b',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36'
             },
             params: {
                 offset: 0,
