@@ -31,8 +31,8 @@ async function parsing(param) {
             url: 'https://fedresurs.ru/backend/encumbrances?offset=15&limit=15&searchString=7709431786&publishDateStart=2021-08-12T00:00:00.000&publishDateEnd=2021-08-14T23:59:59.999',
             headers: {
                 'Referer': `https://fedresurs.ru/search/encumbrances?offset=0&limit=15&searchString=7709431786&additionalSearchFnp=true&publishDateStart=2021-08-12T00:00:00.000&publishDateEnd=2021-08-14T23:59:59.999`,
-                'Cookie': 'fedresurscookie=18b095deae8df78427a4c1569de7322b',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36'
+                'Cookie': 'fedresurscookie=8678c7cca03457ecde68163a7f433df2',
+                'User-Agent': 'PostmanRuntime/7.28.3'
             },
             // params: {
             //     offset: 0,
@@ -41,7 +41,7 @@ async function parsing(param) {
             //     publishDateStart: `${param.dateFrom}T00:00:00.000`,
             //     publishDateEnd: `${param.dateTo}T23:59:59.999`
             // },
-        };
+        }; 
         await axios(configToFound)
             .then((res) => {
                 console.log(res);
@@ -59,8 +59,8 @@ async function parsing(param) {
                 url: link,
                 headers: {
                     'referer': `https://fedresurs.ru/search/encumbrances?offset=${count}&limit=15&searchString=7709431786&additionalSearchFnp=true&publishDateStart=2021-08-13T00:00:00.000&publishDateEnd=2021-09-01T23:59:59.999`,
-                    'Cookie': 'fedresurscookie=18b095deae8df78427a4c1569de7322b',
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36'
+                    'Cookie': 'fedresurscookie=8678c7cca03457ecde68163a7f433df2',
+                    'User-Agent': 'PostmanRuntime/7.28.3'
                  },
                 params: { 
                     offset: count,
