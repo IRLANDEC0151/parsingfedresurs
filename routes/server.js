@@ -46,6 +46,7 @@ async function parsing(param) {
         };
         await axios(configToFound)
             .then((res) => {
+                console.log(res);
                 items = res.data.found + 15
                 console.log('items: ', items);
             })
