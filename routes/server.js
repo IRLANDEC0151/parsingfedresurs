@@ -3,6 +3,23 @@ const { Router } = require("express");
 const router = Router();
 const puppeteer = require("puppeteer")
 
+let cookies = [
+    {
+        name: 'fedresurscookie',
+        value: '49a02e3f33f382a97e9f05e2a886a351',
+        domain: '.fedresurs.ru',
+        path: '/',
+        expires: 1629059133.339114,
+        size: 47,
+        httpOnly: true,
+        secure: true,
+        session: false,
+        sameSite: 'None',
+        sameParty: false,
+        sourceScheme: 'Secure',
+        sourcePort: 443
+    }
+]
 
 router.get('/', async (req, res) => {
     res.render("home", {
@@ -28,13 +45,14 @@ async function parsing(param) {
             headless: true,
             args: [
                 '--no-sandbox'
-
-            ]
+            ] 
         })
         const page = await browser.newPage();
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.0 Safari/537.36')
+        await page.setCookie(...cookies);
         await page.goto(link, { waitUntil: "domcontentloaded" })
         //набираю Инн  
-        console.log(await page.content());
+        console.log(await browser.userAgent());
         await page.waitForSelector('.form-control');
         await page.click('.form-control');
         await page.type('.form-control', `${param.inn}`);
