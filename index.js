@@ -2,6 +2,7 @@ const path = require("path");
 const express = require("express");
 const app = express()
 const PORT = process.env.PORT || 3000
+const cors = require('cors');
 //шаблонизатор
 const exphbs = require("express-handlebars");
 const hbs = exphbs.create({
@@ -14,6 +15,7 @@ app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 //место где лежат наши шаблоны 
 app.set("views", "views");
+app.use(cors());
 app.use(express.json());
 //чтобы работал req.body
 app.use(
