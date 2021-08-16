@@ -8,3 +8,14 @@ html {
   width: 20rem;
   height: 3rem;
 }
+.thead {
+  text-align: center;
+}
+.caption {
+  cursor: pointer;
+  color: crimson;
+  font-weight: 600;
+}
+.spinner-grow {
+  visibility: hidden;
+}

@@ -4,17 +4,22 @@ let dateFromInput = document.querySelector('.dateFrom')
 let dateToInput = document.querySelector('.dateTo')
 let innInput = document.querySelector('.innInput input')
 
+let cleanTableBtn = document.querySelector('.caption')
+let spinnerSearch = document.querySelector('.spinner-grow')
 searchBtn.addEventListener('click', () => {
+    searchBtn.textContent = 'Загрузка...'
+    searchBtn.disabled = true
+    searchBtn.insertAdjacentHTML('afterbegin', ' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
     data = {
         inn: innInput.value,
         dateFrom: dateFromInput.value || 0,
         dateTo: dateToInput.value || 0
 
     }
-    console.log(data);
     postForm(data)
-        .then((data) => {
-            console.log('data: ', data);
+        .then((data) => {  
+            searchBtn.textContent = 'Поиск'
+            searchBtn.disabled = false
             createTable(data.data)
         })
 
@@ -26,6 +31,10 @@ innInput.addEventListener('input', (e) => {
     } else {
         searchBtn.disabled = true
     }
+})
+
+cleanTableBtn.addEventListener('click', () => {
+    document.querySelector('.table tbody').innerHTML = ''
 })
 
 async function postForm(data) {
@@ -48,6 +57,7 @@ function createTable(data) {
       <th scope="row">${document.querySelector('.table tbody').childElementCount + 1}</th>
       <td>${i.nameCompany}</td>
       <td>${i.inn}</td>
+      <td>${i.count}</td> 
     </tr>
         `)
     });

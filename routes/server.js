@@ -22,16 +22,26 @@ let cookies = [
 ]
 
 router.get('/', async (req, res) => {
-    res.render("home", {
-        title: "Парсинг fedresurs",
-        style: '/home.css',
-        script: '/home.js'
-    })
+    try {
+        res.render("home", {
+            title: "Парсинг fedresurs",
+            style: '/home.css',
+            script: '/home.js'
+        })
+    } catch (error) {
+        console.log(error);
+    }
+
 })
 
 router.post('/postForm', async (req, res) => {
-    let data = await parsing(req.body)
-    res.status(200).json({ data })
+    try {
+        let data = await parsing(req.body)
+        res.status(200).json({ data })
+    } catch (error) {
+        console.log(error);
+    }
+
 })
 
 
@@ -45,18 +55,16 @@ async function parsing(param) {
             headless: true,
             args: [
                 '--no-sandbox'
-            ] 
+            ]
         })
         const page = await browser.newPage();
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.0 Safari/537.36')
         await page.setCookie(...cookies);
         await page.goto(link, { waitUntil: "domcontentloaded" })
         //набираю Инн  
-        console.log(await browser.userAgent());
         await page.waitForSelector('.form-control');
         await page.click('.form-control');
         await page.type('.form-control', `${param.inn}`);
-        console.log('a тут');
         //набираю дату
         await page.click('body > fedresurs-app > div:nth-child(3) > search > div > div > div > encumbrances-search > div > div > div > form > expand-panel > div.toggle > a')
         await page.waitForSelector('#id1 > div > div.form-group.hide_label.load_publ_date > date-range-picker > div > div > input.datepicker-range-wrap__input-field.datepicker-range-wrap__input-field_from.ng-untouched.ng-pristine.ng-valid', { visible: true })
@@ -91,6 +99,15 @@ async function parsing(param) {
                 })
             }
             return data
+        })
+        html = html.map((item, index, arr) => {
+            let count = 0
+            arr.forEach(element => {
+                if (item.inn == element.inn) {
+                    count++;
+                }
+            });
+            return { ...item, count }
         })
         html = html.filter((item, index, array) => array.findIndex(i => (i.inn === item.inn)) === index)
 

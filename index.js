@@ -20,13 +20,13 @@ app.use(
     express.urlencoded({
         extended: true,
     })
-    );
+);
 app.use(
     express.static(path.join(__dirname, "public", "css")),
     express.static(path.join(__dirname, "public", "img")),
     express.static(path.join(__dirname, "public", "js"))
 );
-    app.use(require('./routes/server'))
+app.use(require('./routes/server'))
 
 app.listen(PORT, () => {
     console.log("сервер запущен");
