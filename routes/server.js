@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
 router.post('/postForm', async (req, res) => {
     try {
         let data = await parsing(req.body)
-        res.status(200).json({ data })
+            res.status(200).json({ data }) 
     } catch (error) {
         console.log(error);
     }
@@ -52,7 +52,7 @@ async function parsing(param) {
 
     try {
         browser = await puppeteer.launch({
-            headless: true,
+            headless: false,
             args: [
                 '--no-sandbox'
             ]
@@ -63,6 +63,7 @@ async function parsing(param) {
         await page.goto(link, { waitUntil: "domcontentloaded" })
         //набираю Инн  
         await page.waitForSelector('.form-control');
+
         await page.click('.form-control');
         await page.type('.form-control', `${param.inn}`);
         //набираю дату
@@ -74,12 +75,26 @@ async function parsing(param) {
         //поиск
         await page.click('body > fedresurs-app > div:nth-child(3) > search > div > div > div > encumbrances-search > div > div > div > form > button')
         await page.waitForSelector('.all_biddings', { visible: true })
+
         let count = await page.evaluate(() => {
-            return Math.ceil(parseInt(document.querySelector('.search-count-block').textContent) / 15 - 1)
+            let i = parseInt(document.querySelector('.search-count-block').textContent)
+            if (i / 16 > 31) {
+                return null
+            } else if (i <= 15) {
+                return 0;
+            } else if (i / 15 <= 1) {
+                return 1;
+            } else {
+                return Math.ceil((i - 15) / 15)
+            }
         })
-        while (count != 1) {
-            await page.click('.btn_load_more')
+        if (count == null) {
+            await browser.close()
+            return 'error'
+        }
+        while (count > 0) {
             await page.waitForSelector('.btn_load_more');
+            await page.click('.btn_load_more')
             count--
         }
 
@@ -110,7 +125,7 @@ async function parsing(param) {
             return { ...item, count }
         })
         html = html.filter((item, index, array) => array.findIndex(i => (i.inn === item.inn)) === index)
-
+        await page.close()
         return html
     } catch (error) {
         console.log(error);

@@ -3,6 +3,7 @@ let searchBtn = document.querySelector('.searchBtn')
 let dateFromInput = document.querySelector('.dateFrom')
 let dateToInput = document.querySelector('.dateTo')
 let innInput = document.querySelector('.innInput input')
+let errorText = document.querySelector('.error')
 
 let cleanTableBtn = document.querySelector('.caption')
 let spinnerSearch = document.querySelector('.spinner-grow')
@@ -17,10 +18,17 @@ searchBtn.addEventListener('click', () => {
 
     }
     postForm(data)
-        .then((data) => {  
-            searchBtn.textContent = 'Поиск'
-            searchBtn.disabled = false
-            createTable(data.data)
+        .then((data) => {
+            console.log(data.data);    
+            if (data.data == 'error') {  
+                errorText.textContent = 'Ошибка! Выберите Период публикации поменьше'
+                searchBtn.textContent = 'Поиск'
+                searchBtn.disabled = false
+            } else {
+                searchBtn.textContent = 'Поиск' 
+                searchBtn.disabled = false
+                createTable(data.data)
+            } 
         })
 
 })
