@@ -52,7 +52,7 @@ async function parsing(param) {
 
     try {
         browser = await puppeteer.launch({
-            headless: false,
+            headless: true,
             args: [
                 '--no-sandbox'
             ]
