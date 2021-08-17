@@ -20,7 +20,7 @@ let cookies = [
         sourcePort: 443
     }
 ]
-
+let companyData = []
 router.get('/', async (req, res) => {
     try {
         res.render("home", {
@@ -37,7 +37,7 @@ router.get('/', async (req, res) => {
 router.post('/postForm', async (req, res) => {
     try {
         let data = await parsing(req.body)
-            res.status(200).json({ data }) 
+        res.status(200).json({ data })
     } catch (error) {
         console.log(error);
     }
@@ -52,7 +52,7 @@ async function parsing(param) {
 
     try {
         browser = await puppeteer.launch({
-            headless: true,
+            headless: false,
             args: [
                 '--no-sandbox'
             ]
@@ -64,7 +64,7 @@ async function parsing(param) {
         //набираю Инн  
         await page.waitForSelector('.form-control');
 
-        await page.click('.form-control');
+        await page.click('.form-control');   
         await page.type('.form-control', `${param.inn}`);
         //набираю дату
         await page.click('body > fedresurs-app > div:nth-child(3) > search > div > div > div > encumbrances-search > div > div > div > form > expand-panel > div.toggle > a')
@@ -99,9 +99,9 @@ async function parsing(param) {
         }
 
         let html = await page.evaluate(() => {
-            let data = []
             let container = document.querySelector('.all_biddings').children
             let tr = Array.prototype.slice.call(container);
+            let data=[]
             for (let index = 0; index < tr.length; index++) {
                 const element = tr[index];
                 let text = element.children[1].children[1].textContent
@@ -110,25 +110,31 @@ async function parsing(param) {
                 let nameCompany = parseString[0]
                 data.push({
                     inn,
-                    nameCompany
+                    nameCompany,
+                    count:1
+
                 })
             }
             return data
         })
-        html = html.map((item, index, arr) => {
-            let count = 0
-            arr.forEach(element => {
-                if (item.inn == element.inn) {
-                    count++;
-                }
-            });
-            return { ...item, count }
-        })
-        html = html.filter((item, index, array) => array.findIndex(i => (i.inn === item.inn)) === index)
         await browser.close()
-        return html
+        companyData = companyData.concat(html);
+        sortCompany() 
+        return companyData
+
     } catch (error) {
         console.log(error);
     }
+}
+function sortCompany() {
+    companyData = companyData.map((item, index, arr) => {
+        arr.forEach((element,indexFE) => {
+            if (item.inn == element.inn && index!=indexFE) {
+                item.count++;
+            }
+        });
+        return item     
+    })
+    companyData = companyData.filter((item, index, array) => array.findIndex(i => (i.inn === item.inn)) === index)
 }
 module.exports = router;

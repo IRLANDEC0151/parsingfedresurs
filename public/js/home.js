@@ -10,6 +10,8 @@ let spinnerSearch = document.querySelector('.spinner-grow')
 searchBtn.addEventListener('click', () => {
     searchBtn.textContent = 'Загрузка...'
     searchBtn.disabled = true
+    errorText.textContent = ''
+
     searchBtn.insertAdjacentHTML('afterbegin', ' <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>');
     data = {
         inn: innInput.value,
@@ -19,16 +21,16 @@ searchBtn.addEventListener('click', () => {
     }
     postForm(data)
         .then((data) => {
-            console.log(data.data);    
-            if (data.data == 'error') {  
+            console.log(data.data);
+            if (data.data == 'error') {
                 errorText.textContent = 'Ошибка! Выберите Период публикации поменьше'
                 searchBtn.textContent = 'Поиск'
                 searchBtn.disabled = false
             } else {
-                searchBtn.textContent = 'Поиск' 
+                searchBtn.textContent = 'Поиск'
                 searchBtn.disabled = false
                 createTable(data.data)
-            } 
+            }
         })
 
 })
@@ -59,6 +61,7 @@ async function postForm(data) {
 }
 
 function createTable(data) {
+    document.querySelector('.table tbody').innerHTML=''
     data.forEach((i) => {
         document.querySelector('.table tbody').insertAdjacentHTML("beforeend", `
       <tr>
