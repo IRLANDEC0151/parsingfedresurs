@@ -52,7 +52,7 @@ async function parsing(param) {
 
     try {
         browser = await puppeteer.launch({
-            headless: false,
+            headless: true,
             args: [
                 '--no-sandbox'
             ]
@@ -125,7 +125,7 @@ async function parsing(param) {
             return { ...item, count }
         })
         html = html.filter((item, index, array) => array.findIndex(i => (i.inn === item.inn)) === index)
-        await page.close()
+        await browser.close()
         return html
     } catch (error) {
         console.log(error);
