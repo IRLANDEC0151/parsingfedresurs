@@ -25,11 +25,11 @@ searchBtn.addEventListener('click', () => {
             if (data.data == 'error') {
                 errorText.textContent = 'Ошибка! Выберите Период публикации поменьше'
                 searchBtn.textContent = 'Поиск'
-                searchBtn.disabled = false 
-            } else if(data.data =='нет данных'){
+                searchBtn.disabled = false
+            } else if (data.data == 'нет данных') {
                 searchBtn.textContent = 'Поиск'
                 searchBtn.disabled = false
-                errorText.textContent ='Нет данных'
+                errorText.textContent = 'Нет данных'
             } else {
                 searchBtn.textContent = 'Поиск'
                 searchBtn.disabled = false
@@ -49,7 +49,21 @@ innInput.addEventListener('input', (e) => {
 
 cleanTableBtn.addEventListener('click', () => {
     document.querySelector('.table tbody').innerHTML = ''
+    cleanTable().
+        then(data => {
+
+        })
+
 })
+
+
+
+async function cleanTable() {
+    return await fetch('/cleanData').then((data) => {
+        return data.json()
+    })
+
+}
 
 async function postForm(data) {
     return await fetch('/postForm', {
@@ -65,7 +79,7 @@ async function postForm(data) {
 }
 
 function createTable(data) {
-    document.querySelector('.table tbody').innerHTML=''
+    document.querySelector('.table tbody').innerHTML = ''
     data.forEach((i) => {
         document.querySelector('.table tbody').insertAdjacentHTML("beforeend", `
       <tr>

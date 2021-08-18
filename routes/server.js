@@ -45,6 +45,17 @@ router.post('/postForm', async (req, res) => {
 })
 
 
+router.get('/cleanData', async (req, res) => {
+    try {
+        companyData=[]
+        res.status(200).json({ message:'data is cleaning' })
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+
+
 async function parsing(param) {
     const link = 'https://fedresurs.ru/search/encumbrances'
     let browser;
