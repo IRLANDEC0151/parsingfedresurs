@@ -48,7 +48,6 @@ router.post('/postForm', async (req, res) => {
 async function parsing(param) {
     const link = 'https://fedresurs.ru/search/encumbrances'
     let browser;
-    let date = param.dateFrom.split('-').reverse().join('') + param.dateTo.split('-').reverse().join('')
 
     try {
         browser = await puppeteer.launch({
@@ -64,22 +63,29 @@ async function parsing(param) {
         //набираю Инн  
         await page.waitForSelector('.form-control');
 
-        await page.click('.form-control');   
+        await page.click('.form-control');
         await page.type('.form-control', `${param.inn}`);
-        //набираю дату
-        await page.click('body > fedresurs-app > div:nth-child(3) > search > div > div > div > encumbrances-search > div > div > div > form > expand-panel > div.toggle > a')
-        await page.waitForSelector('#id1 > div > div.form-group.hide_label.load_publ_date > date-range-picker > div > div > input.datepicker-range-wrap__input-field.datepicker-range-wrap__input-field_from.ng-untouched.ng-pristine.ng-valid', { visible: true })
-        //с-по
-        //await page.click('#id1 > div > div.form-group.hide_label.load_publ_date > date-range-picker > div > div > input.datepicker-range-wrap__input-field.datepicker-range-wrap__input-field_from.ng-untouched.ng-pristine.ng-valid')
-        await page.type('#id1 > div > div.form-group.hide_label.load_publ_date > date-range-picker > div > div > input.datepicker-range-wrap__input-field.datepicker-range-wrap__input-field_from.ng-untouched.ng-pristine.ng-valid', date);
+        if (param.dateFrom != 0) {
+            let date = param.dateFrom.split('-').reverse().join('') + param.dateTo.split('-').reverse().join('')
+            //набираю дату
+            await page.click('body > fedresurs-app > div:nth-child(3) > search > div > div > div > encumbrances-search > div > div > div > form > expand-panel > div.toggle > a')
+            await page.waitForSelector('#id1 > div > div.form-group.hide_label.load_publ_date > date-range-picker > div > div > input.datepicker-range-wrap__input-field.datepicker-range-wrap__input-field_from.ng-untouched.ng-pristine.ng-valid', { visible: true })
+            //с-по
+            //await page.click('#id1 > div > div.form-group.hide_label.load_publ_date > date-range-picker > div > div > input.datepicker-range-wrap__input-field.datepicker-range-wrap__input-field_from.ng-untouched.ng-pristine.ng-valid')
+            await page.type('#id1 > div > div.form-group.hide_label.load_publ_date > date-range-picker > div > div > input.datepicker-range-wrap__input-field.datepicker-range-wrap__input-field_from.ng-untouched.ng-pristine.ng-valid', date);
+        }
+
         //поиск
         await page.click('body > fedresurs-app > div:nth-child(3) > search > div > div > div > encumbrances-search > div > div > div > form > button')
-        await page.waitForSelector('.all_biddings', { visible: true })
-
+        await page.waitForSelector('.search-count-block', { visible: true })
+        await page.waitForTimeout(2000)
         let count = await page.evaluate(() => {
             let i = parseInt(document.querySelector('.search-count-block').textContent)
-            if (i / 16 > 31) {
+            console.log(document.querySelector('.search-count-block').textContent);
+            if (i == 0) {
                 return null
+            } else if (i / 16 > 31) {
+                return undefined
             } else if (i <= 15) {
                 return 0;
             } else if (i / 15 <= 1) {
@@ -88,10 +94,15 @@ async function parsing(param) {
                 return Math.ceil((i - 15) / 15)
             }
         })
-        if (count == null) {
-            await browser.close()
-            return 'error'
+        if (count === undefined) { 
+               await browser.close() 
+            return 'error'     
+        } else if (count ===  null) { 
+               await browser.close()
+            return 'нет данных'
         }
+        await page.waitForSelector('.all_biddings', { visible: true })
+
         while (count > 0) {
             await page.waitForSelector('.btn_load_more');
             await page.click('.btn_load_more')
@@ -101,7 +112,7 @@ async function parsing(param) {
         let html = await page.evaluate(() => {
             let container = document.querySelector('.all_biddings').children
             let tr = Array.prototype.slice.call(container);
-            let data=[]
+            let data = []
             for (let index = 0; index < tr.length; index++) {
                 const element = tr[index];
                 let text = element.children[1].children[1].textContent
@@ -111,15 +122,15 @@ async function parsing(param) {
                 data.push({
                     inn,
                     nameCompany,
-                    count:1
+                    count: 1
 
                 })
             }
             return data
         })
-        await browser.close()
+           await browser.close() 
         companyData = companyData.concat(html);
-        sortCompany() 
+        sortCompany()
         return companyData
 
     } catch (error) {
@@ -128,12 +139,12 @@ async function parsing(param) {
 }
 function sortCompany() {
     companyData = companyData.map((item, index, arr) => {
-        arr.forEach((element,indexFE) => {
-            if (item.inn == element.inn && index!=indexFE) {
+        arr.forEach((element, indexFE) => {
+            if (item.inn == element.inn && index != indexFE) {
                 item.count++;
             }
         });
-        return item     
+        return item
     })
     companyData = companyData.filter((item, index, array) => array.findIndex(i => (i.inn === item.inn)) === index)
 }

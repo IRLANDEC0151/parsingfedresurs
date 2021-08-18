@@ -25,7 +25,11 @@ searchBtn.addEventListener('click', () => {
             if (data.data == 'error') {
                 errorText.textContent = 'Ошибка! Выберите Период публикации поменьше'
                 searchBtn.textContent = 'Поиск'
+                searchBtn.disabled = false 
+            } else if(data.data =='нет данных'){
+                searchBtn.textContent = 'Поиск'
                 searchBtn.disabled = false
+                errorText.textContent ='Нет данных'
             } else {
                 searchBtn.textContent = 'Поиск'
                 searchBtn.disabled = false
