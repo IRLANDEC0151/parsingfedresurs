@@ -87,7 +87,7 @@ async function handleFiles() {
         console.log(data);
 
     })
-    let eventSource = new EventSource("http://localhost:3000/sse");
+    let eventSource = new EventSource("https://parsingfedresurs.herokuapp.com/sse");
     eventSource.onmessage = function (e) {
         var data = JSON.parse(e.data);
         if (data.hasOwnProperty('allInn')) {

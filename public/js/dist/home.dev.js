@@ -87,7 +87,7 @@ function handleFiles() {
           }));
 
         case 5:
-          eventSource = new EventSource("http://localhost:3000/sse");
+          eventSource = new EventSource("https://parsingfedresurs.herokuapp.com/sse");
 
           eventSource.onmessage = function (e) {
             var data = JSON.parse(e.data);
