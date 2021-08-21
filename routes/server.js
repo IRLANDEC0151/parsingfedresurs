@@ -1,8 +1,8 @@
-const e = require("express");
+
 const { Router } = require("express");
 const router = Router();
 const puppeteer = require("puppeteer")
-
+const parsingListInn = require('../helpers/index.js')
 let cookies = [
     {
         name: 'fedresurscookie',
@@ -21,6 +21,7 @@ let cookies = [
     }
 ]
 let companyData = []
+let innFileList
 router.get('/', async (req, res) => {
     try {
         res.render("home", {
@@ -34,10 +35,12 @@ router.get('/', async (req, res) => {
 
 })
 
-router.post('/postForm', async (req, res) => {
+router.get('/postForm', async (req, res) => {
     try {
-        let data = await parsing(req.body)
+
+        let = data = await parsing(req.body)
         res.status(200).json({ data })
+
     } catch (error) {
         console.log(error);
     }
@@ -47,8 +50,27 @@ router.post('/postForm', async (req, res) => {
 
 router.get('/cleanData', async (req, res) => {
     try {
-        companyData=[]
-        res.status(200).json({ message:'data is cleaning' })
+        companyData = []
+        res.status(200).json({ message: 'data is cleaning' })
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+
+router.post('/ssePost', async (req, res) => {
+    try {
+        innFileList = req.body.innFileList
+        res.status(200).json({ message: innFileList.length })
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+
+router.get('/sse', (req, res) => {
+    try {
+        parsingListInn(innFileList, res)
     } catch (error) {
         console.log(error);
     }
@@ -88,14 +110,13 @@ async function parsing(param) {
 
         //поиск
         await page.click('body > fedresurs-app > div:nth-child(3) > search > div > div > div > encumbrances-search > div > div > div > form > button')
-        await page.waitForSelector('.search-count-block', { visible: true })
-        await page.waitForTimeout(2000)
+        await page.waitForFunction(' document.querySelector(".search-count-block").textContent!="" ')
         let count = await page.evaluate(() => {
             let i = parseInt(document.querySelector('.search-count-block').textContent)
             console.log(document.querySelector('.search-count-block').textContent);
             if (i == 0) {
                 return null
-            } else if (i / 16 > 31) {
+            } else if (i / 16 > 33) {
                 return undefined
             } else if (i <= 15) {
                 return 0;
@@ -105,11 +126,11 @@ async function parsing(param) {
                 return Math.ceil((i - 15) / 15)
             }
         })
-        if (count === undefined) { 
-               await browser.close() 
-            return 'error'     
-        } else if (count ===  null) { 
-               await browser.close()
+        if (count === undefined) {
+            await browser.close()
+            return 'error'
+        } else if (count === null) {
+            await browser.close()
             return 'нет данных'
         }
         await page.waitForSelector('.all_biddings', { visible: true })
@@ -139,7 +160,7 @@ async function parsing(param) {
             }
             return data
         })
-           await browser.close() 
+        await browser.close()
         companyData = companyData.concat(html);
         sortCompany()
         return companyData
