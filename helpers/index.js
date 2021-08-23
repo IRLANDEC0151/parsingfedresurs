@@ -20,7 +20,7 @@ taskQueue.drain(function () {
 });
 
 async function parsingListInn(innList, res) {
-    res.setHeader('Content-Type', 'text/event-stream')
+    res.setHeader('Content-Type', 'text/event-stream') 
         res.setHeader('Cache-Control', 'no-cache')
     await p.initBrowser()
     innList.forEach((inn, index, arr) => {

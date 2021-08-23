@@ -35,7 +35,7 @@ router.get('/', async (req, res) => {
 
 })
 
-router.get('/postForm', async (req, res) => {
+router.post('/postForm', async (req, res) => {
     try {
 
         let = data = await parsing(req.body)
