@@ -48,52 +48,35 @@ router.get('/', function _callee(req, res) {
     }
   });
 });
-router.get('/postForm', function _callee2(req, res) {
+router.post('/postForm', function _callee2(req, res) {
   var data;
   return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.prev = 0;
+          _context2.next = 3;
+          return regeneratorRuntime.awrap(parsing(req.body));
 
-          if (!(req.body.innFileList != null)) {
-            _context2.next = 7;
-            break;
-          }
-
-          _context2.next = 4;
-          return regeneratorRuntime.awrap(parsingListInn(req.body.innFileList, res));
-
-        case 4:
+        case 3:
           data = _context2.sent;
+          res.status(200).json({
+            data: data
+          });
           _context2.next = 10;
           break;
 
         case 7:
-          _context2.next = 9;
-          return regeneratorRuntime.awrap(parsing(req.body));
-
-        case 9:
-          data = _context2.sent;
-
-        case 10:
-          res.status(200).json({
-            data: data
-          });
-          _context2.next = 16;
-          break;
-
-        case 13:
-          _context2.prev = 13;
+          _context2.prev = 7;
           _context2.t0 = _context2["catch"](0);
           console.log(_context2.t0);
 
-        case 16:
+        case 10:
         case "end":
           return _context2.stop();
       }
     }
-  }, null, null, [[0, 13]]);
+  }, null, null, [[0, 7]]);
 });
 router.get('/cleanData', function _callee3(req, res) {
   return regeneratorRuntime.async(function _callee3$(_context3) {

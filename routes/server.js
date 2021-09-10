@@ -37,8 +37,7 @@ router.get('/', async (req, res) => {
 
 router.post('/postForm', async (req, res) => {
     try {
-
-        let = data = await parsing(req.body)
+        let data = await parsing(req.body)
         res.status(200).json({ data })
 
     } catch (error) {
@@ -78,13 +77,12 @@ router.get('/sse', (req, res) => {
 })
 
 
-async function parsing(param) {
+async function parsing(param) { 
     const link = 'https://fedresurs.ru/search/encumbrances'
     let browser;
-
     try {
         browser = await puppeteer.launch({
-            headless: false,
+            headless: true,
             args: [
                 '--no-sandbox'
             ]
