@@ -79,7 +79,7 @@ router.get('/sse', (req, res) => {
 
 async function parsing(param) { 
     const link = 'https://fedresurs.ru/search/encumbrances'
-    let browser;
+    let browser;   
     try {
         browser = await puppeteer.launch({
             headless: true,
